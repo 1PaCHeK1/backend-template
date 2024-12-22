@@ -1,0 +1,155 @@
+[project]
+name = "backend-template"
+version = "0.0.1"
+description = ""
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "aioboto3>=13.2.0",
+    "aioinject>=0.35.3",
+    "alembic>=1.14.0",
+    "async-keycloak>=0.28.6",
+    "asyncpg>=0.30.0",
+    "fastapi>=0.115.6",
+    "faststream[kafka]>=0.5.33",
+    "pydantic>=2.10.4",
+    "pydantic-settings>=2.7.0",
+    "pyjwt[crypto]>=2.10.1",
+    "python-dotenv>=1.0.1",
+    "requests>=2.32.3",
+    "result>=0.17.0",
+    "sentry-sdk>=2.19.2",
+    "sqlalchemy>=2.0.36",
+    "uuid-utils>=0.10.0",
+    "uvicorn[standard]>=0.34.0",
+    "uvloop>=0.21.0 ; sys_platform != 'win32'",
+]
+
+[dependency-groups]
+types = [
+    "types-aiobotocore-s3>=2.16.0",
+]
+lint = [
+    "deptry>=0.21.2",
+    "mypy>=1.13.0",
+    "pyright>=1.1.391",
+    "ruff>=0.8.4",
+]
+test = [
+    "coverage>=7.6.9",
+    "polyfactory>=2.18.1",
+    "pytest-archon>=0.0.6",
+    "pytest>=8.3.4",
+    "asgi-lifespan>=2.1.0",
+    "sqlalchemy-pytest>=0.3.2.post1",
+    "anyio>=4.7.0",
+]
+dev = [
+    "commitizen>=4.1.0",
+]
+
+
+[tool.pytest.ini_options]
+pythonpath = "src"
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["src/alembic/*"]
+command_line = "-m pytest -vv"
+concurrency = ["greenlet"]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "class .*\\(.*\\bProtocol\\b.*\\):",
+    "@(?:typing\\.)?overload",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+]
+show_missing = true
+skip_covered = true
+skip_empty = true
+precision = 2
+# fail_under = 100
+
+
+[tool.ruff]
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+fixable = [
+    "F",
+    "E",
+    "W",
+    "I",
+    "COM",
+    "UP",
+    "RUF",
+]
+unfixable = [
+    "F841", # Variable  is assigned to but never used
+]
+select = ["ALL"]
+ignore = [
+    "COM812",
+    "D100",
+    "D101",
+    "D102",
+    "D103",
+    "D104",
+    "D105",
+    "D107",
+    "D203",
+    "D212",
+    "D400",
+    "D415",
+    "ISC001",
+    "TC003",
+]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 5
+
+[tool.ruff.lint.flake8-pytest-style]
+fixture-parentheses = false
+mark-parentheses = false
+
+[tool.ruff.lint.per-file-ignores]
+"src/alembic/*" = ["INP001"]
+"tests/*" = [
+    "S101",
+]
+
+[tool.ruff.lint.flake8-tidy-imports]
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"fastapi.status".msg = "Use http.HTTPStatus instead."
+"starlette.status".msg = "Use http.HTTPStatus instead."
+"httpx.codes".msg = "Use http.HTTPStatus instead."
+
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "0.0.1"
+tag_format = "$version"
+version_scheme = "pep440"
+version_provider = "pep621"
+major_version_zero = true
+update_changelog_on_bump = true
+
+
+[tool.pyright]
+typeCheckingMode = "strict"
+reportUnusedImport = false
+reportMissingTypeStubs = false
+reportUnknownMemberType = false
+
+
+[tool.deptry.per_rule_ignores]
+DEP002 = [
+    "uvicorn",
+    "uvloop",
+    "asyncpg",
+    "requests", # keycloak client
+]
+DEP003 = ["botocore", "aiobotocore", "starlette"]
