@@ -8,7 +8,7 @@ from faststream.broker.core.usecase import BrokerUsecase
 
 from app.adapters.consumer.kafka.broker import create_broker
 from app.adapters.consumer.kafka.settings import KafkaSettings
-from app.core.di.container import create_container
+from app.di.container import create_container
 from app.version import __version__
 from lib.settings import get_settings
 

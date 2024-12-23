@@ -7,7 +7,7 @@ from starlette.middleware.cors import CORSMiddleware
 
 from app.adapters.api import v1
 from app.adapters.api.settings import ApiSettings
-from app.core.di import create_container
+from app.di import create_container
 from app.telemetry.setup import setup_telemetry
 from app.version import __version__
 from lib.settings import get_settings

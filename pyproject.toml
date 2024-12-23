@@ -136,7 +136,10 @@ version_scheme = "pep440"
 version_provider = "pep621"
 major_version_zero = true
 update_changelog_on_bump = true
-
+version_files = [
+    "pyproject.toml:version",
+    "src/app/version.py",
+]
 
 [tool.pyright]
 typeCheckingMode = "strict"

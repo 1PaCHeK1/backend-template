@@ -4,8 +4,8 @@ import pytest
 from pytest_archon import archrule
 
 import app.adapters
-import app.core.di._modules.domain
 import app.core.domain
+import app.di._modules.domain
 
 
 def test_core_cant_import_adapters() -> None:
@@ -83,7 +83,7 @@ def test_forbidden_libraries() -> None:
 
 
 def test_dependency_injection_imports() -> None:
-    target = app.core.di._modules.domain  # noqa: SLF001
+    target = app.di._modules.domain  # noqa: SLF001
     rule = archrule("incorrect-di-domain-import")
 
     for module in pkgutil.walk_packages(target.__path__, f"{target.__name__}."):

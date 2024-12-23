@@ -17,6 +17,7 @@ def get_keycloak_service(
     settings: KeycloakSettings,
 ) -> KeycloakService[DecodedTokenDTO]:
     return KeycloakService[DecodedTokenDTO](
+        token_dto=DecodedTokenDTO,
         server_url=settings.server_url,
         client_id=settings.client_id,
         realm_name=settings.realm_name,

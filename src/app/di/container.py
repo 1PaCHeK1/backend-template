@@ -6,7 +6,7 @@ import aioinject
 from pydantic_settings import BaseSettings
 
 from app.connectors.keycloak.settings import KeycloakSettings
-from app.core.di import _modules
+from app.di import _modules
 from app.storages.db.settings import DatabaseSettings
 from app.storages.s3.settings import S3Settings
 from lib.di import autodiscover_providers

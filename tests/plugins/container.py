@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 @pytest.fixture(scope="session")
 def container() -> aioinject.Container:
-    from app.core.di import create_container
+    from app.di import create_container
 
     return create_container()
 

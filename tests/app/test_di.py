@@ -1,6 +1,6 @@
 from aioinject import validation
 
-from app.core.di import create_container
+from app.di import create_container
 
 
 def test_validate_container() -> None:

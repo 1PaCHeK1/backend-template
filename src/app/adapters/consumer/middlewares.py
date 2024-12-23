@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, Any
 
 from faststream.broker.middlewares import BaseMiddleware
 
-from app.core.di import create_container
+from app.di import create_container
 
 if TYPE_CHECKING:
     from aioinject import InjectionContext
