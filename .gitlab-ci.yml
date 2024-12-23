@@ -60,7 +60,7 @@ ruff:
 deptry:
   extends: .lint-job
   script:
-    - uv run deptry .
+    - uv run deptry src tests
 
 pytest:
   extends: .lint-job
