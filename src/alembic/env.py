@@ -1,12 +1,4 @@
-# ruff: noqa: E402
 import asyncio
-
-import dotenv
-
-from app.storages.db.settings import DatabaseSettings
-from lib.settings import get_settings
-
-dotenv.load_dotenv(".env", override=True)
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config, pool
@@ -16,6 +8,8 @@ from sqlalchemy.ext.asyncio import AsyncEngine
 import app.storages.db.models  # noqa: F401
 from alembic import context
 from app.storages.db.base import Base
+from app.storages.db.settings import DatabaseSettings
+from lib.settings import get_settings
 
 config = context.config
 
