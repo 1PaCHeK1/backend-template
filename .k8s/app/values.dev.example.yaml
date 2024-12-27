@@ -1,0 +1,36 @@
+image:
+  repository: "backend"
+  pullPolicy: Never
+  tag: ""
+
+
+api:
+  replicaCount: 1
+  resources:
+    requests:
+      cpu: 250m
+
+  antiAffinity:
+    enabled: false
+
+  ingress:
+    enabled: true
+    className: "nginx"
+    annotations: {}
+    host: "backend.localhost"
+    path: /
+    pathType: Prefix
+    tls: []
+
+
+# We don't want to run migrations automatically in most cases during development
+
+
+common:
+  envFrom:
+    - secretRef:
+        name: database-secret
+      prefix: database_
+    - secretRef:
+        name: keycloak-secret
+      prefix: keycloak_

@@ -15,5 +15,7 @@ wheels/
 .coverage
 coverage.xml
 
-# environments
+# dev
 .env
+.k8s/app/values.dev.yaml
+/local

@@ -1,0 +1,21 @@
+{{- define "common.labels" }}
+helm.sh/chart: {{ include "application.chart" . }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{ include "common.selectorLabels" . }}
+{{- end }}
+
+{{- define "common.selectorLabels" }}
+app.kubernetes.io/name: {{ include "application.name" . }}
+{{- end }}
+
+
+{{- define "cronjob.labels" }}
+{{ include "common.labels" . }}
+app.kubernetes.io/component: cronjob
+{{- end }}
+
+{{- define "cronjob.selectorLabels" }}
+{{- include "common.selectorLabels" . }}
+app.kubernetes.io/component: cronjob
+{{- end }}
