@@ -1,0 +1,85 @@
+image:
+  repository: ""
+  pullPolicy: IfNotPresent
+  tag: ""
+
+nameOverride: ""
+fullnameOverride: ""
+podAnnotations: {}
+
+podSecurityContext:
+  fsGroup: 2000
+
+securityContext:
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+
+
+api:
+  enabled: true
+  port: 8000
+  args: []
+  replicaCount: 3
+  probePath: /health
+  antiAffinity:
+    enable: true
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      memory: 256Mi
+
+  tmpfs:
+    enabled: false
+    sizeLimit: 1Gi
+
+  ingress:
+    enabled: true
+    className: "nginx"
+    annotations: {}
+    host: ""
+    path: /
+    pathType: Prefix
+    tls: []
+
+  service:
+    type: ClusterIP
+
+
+hooks:
+  resources: {}
+  enabled: false
+  defs:
+    migration:
+      entrypoint: ["alembic", "upgrade", "head"]
+      trigger: pre-install,pre-upgrade
+      backoffLimit: 3
+
+
+workers:
+  resources: {}
+  defs: {}
+
+
+cronjobs:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      memory: 256Mi
+  tasks: {}
+
+
+common:
+  envFrom: []
+  volumes: []
+  volumeMounts: []
+
+
+imagePullSecrets: []

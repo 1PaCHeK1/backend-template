@@ -1,0 +1,74 @@
+{{- if and .Values.api.enabled .Values.api.ingress.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "api.name" . }}
+  labels:
+    {{- include "api.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.api.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "api.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        {{- .Values.podAnnotations | toYaml | nindent 8 }}
+      labels:
+        {{- include "api.selectorLabels" . | nindent 8 }}
+    spec:
+      imagePullSecrets:
+        {{- toYaml .Values.imagePullSecrets | nindent 8 }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      affinity:
+        {{ if .Values.api.antiAffinity.enable -}}
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                topologyKey: kubernetes.io/hostname
+                labelSelector:
+                  matchLabels:
+                    {{- include "api.selectorLabels" . | nindent 20 }}
+              weight: 100
+        {{- end }}
+      containers:
+        - name: {{ include "api.name" . }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            {{ range .Values.api.args }}
+            - {{ . | quote }}
+            {{ end }}
+            - "--port"
+            - {{ include "api.port" . | quote }}
+          envFrom:
+            {{- .Values.common.envFrom | toYaml | nindent 12 }}
+          ports:
+            - name: {{ include "api.portName" . }}
+              containerPort: {{ include "api.port" . }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: {{ include "api.probePath" . }}
+              port: {{ include "api.portName" . }}
+          readinessProbe:
+            httpGet:
+              path: {{ include "api.probePath" . }}
+              port: {{ include "api.portName" . }}
+          resources:
+            {{- toYaml .Values.api.resources | nindent 12 }}
+          {{ if .Values.api.tmpfs.enabled -}}
+          volumeMounts:
+            - mountPath: /tmp
+              name: {{ include "api.tmpfsVolumeName" . }}
+          {{- end }}
+      {{ if .Values.api.tmpfs.enabled -}}
+      volumes:
+        - name:  {{ include "api.tmpfsVolumeName" . }}
+          emptyDir:
+            sizeLimit: {{ .Values.api.tmpfs.sizeLimit }}
+      {{- end }}
+{{- end -}}
