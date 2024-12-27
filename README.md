@@ -74,7 +74,7 @@ docker build . -t backend:latest
 ```
 
 ### Create values.dev.yaml
-Create `values.dev.yaml` in `.k8s/app`, use example `values.dev.example.yaml`
+Create `values.dev.yaml` in `.k8s/app`, use the example `values.dev.example.yaml`
 
 
 ### Set secrets or/and configmaps
