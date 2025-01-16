@@ -49,7 +49,7 @@ Domains don't depends on src.app.adapters and other domains, except the shared o
 ```
 
 ```
-src.app.di - IoC container
+src.app.di - IoC container and lifespan management
 ```
 
 ```

@@ -1,10 +1,16 @@
 from __future__ import annotations
 
+import functools
 import importlib
 import pkgutil
 from collections.abc import Iterable, Sequence
 from types import ModuleType
 from typing import TYPE_CHECKING, Any
+
+import aioinject
+from pydantic_settings import BaseSettings
+
+from lib.settings import get_settings
 
 if TYPE_CHECKING:
     from aioinject import Provider
@@ -32,3 +38,8 @@ def autodiscover_providers(
             continue
         result.extend(module_providers)
     return result
+
+
+def register_settings[T: BaseSettings](settings_cls: type[T]) -> aioinject.Singleton[T]:
+    factory = functools.partial(get_settings, settings_cls)
+    return aioinject.Singleton(factory, type_=settings_cls)

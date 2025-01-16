@@ -46,6 +46,7 @@ test = [
 ]
 dev = [
     "commitizen>=4.1.0",
+    "greenlet>=3.1.1",  # for macos
 ]
 
 
@@ -155,4 +156,9 @@ DEP002 = [
     "asyncpg",
     "requests", # keycloak client
 ]
-DEP003 = ["botocore", "aiobotocore", "starlette"]
+DEP003 = [
+    "botocore", 
+    "aiobotocore", 
+    "starlette",
+    "cryptography", # keycloak client
+]

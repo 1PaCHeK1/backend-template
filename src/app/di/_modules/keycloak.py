@@ -7,9 +7,10 @@ import aioinject
 from app.connectors.keycloak.command import Authenticator
 from app.connectors.keycloak.dto import DecodedTokenDTO
 from app.connectors.keycloak.service import KeycloakService
+from app.connectors.keycloak.settings import KeycloakSettings
+from lib.di import register_settings
 
 if TYPE_CHECKING:
-    from app.connectors.keycloak.settings import KeycloakSettings
     from lib.di import Providers
 
 
@@ -27,6 +28,7 @@ def get_keycloak_service(
 
 
 providers: Providers = [
+    register_settings(KeycloakSettings),
     aioinject.Singleton(get_keycloak_service, type_=KeycloakService[DecodedTokenDTO]),
     aioinject.Scoped(Authenticator),
 ]

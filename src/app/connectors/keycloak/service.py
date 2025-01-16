@@ -1,17 +1,20 @@
 from __future__ import annotations
 
 import asyncio
-from typing import Generic, TypeVar, cast
+from typing import TYPE_CHECKING, cast
 
 import jwt
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import serialization
 from keycloak import KeycloakOpenID
 from pydantic import BaseModel
 from result import Err, Ok, Result
 
-TKeycloakTokenDTO = TypeVar("TKeycloakTokenDTO", bound=BaseModel)
+if TYPE_CHECKING:
+    from cryptography.hazmat.primitives.asymmetric.types import PublicKeyTypes
 
 
-class KeycloakService(Generic[TKeycloakTokenDTO]):
+class KeycloakService[TKeycloakTokenDTO: BaseModel]:
     __token_dto__: type[TKeycloakTokenDTO]
 
     _grant_type = "authorization_code"
@@ -36,18 +39,21 @@ class KeycloakService(Generic[TKeycloakTokenDTO]):
             client_secret_key=client_secret_key,
         )
         self._encode_algorithm = encoding_algorithm
-        self._cached_public_key: str | None = None
+        self._cached_public_key: PublicKeyTypes | None = None
         self._public_key_lock = asyncio.Lock()
 
-    async def get_public_key(self) -> str:
+    async def get_public_key(self) -> PublicKeyTypes:
         if self._cached_public_key is None:
             async with self._public_key_lock:
                 if self._cached_public_key is None:
-                    self._cached_public_key = cast(
-                        str,
-                        await self._kc_open_id.public_key(),
+                    public_key = self._public_key_template.format(
+                        public_key=cast(str, await self._kc_open_id.public_key()),
                     )
-        return self._public_key_template.format(public_key=self._cached_public_key)
+                    self._cached_public_key = serialization.load_pem_public_key(
+                        public_key.encode(),
+                        backend=default_backend(),
+                    )
+        return self._cached_public_key
 
     async def decode_token(
         self,
@@ -74,7 +80,7 @@ class KeycloakService(Generic[TKeycloakTokenDTO]):
         public_key = await self.get_public_key()
         decoded_token = jwt.decode(
             jwt=token,
-            key=public_key,
+            key=public_key,  # pyright: ignore[reportArgumentType]
             algorithms=[self._encode_algorithm],
             audience=cast(str, self._kc_open_id.client_id),
             options={

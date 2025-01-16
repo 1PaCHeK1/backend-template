@@ -7,8 +7,9 @@ from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
 from sqlalchemy.orm import DeclarativeBase
 
 from app.storages.db.base.engine import async_engine, async_session_factory
+from app.storages.db.settings import DatabaseSettings
 from app.storages.db.uow import UnitOfWork
-from lib.di import Providers
+from lib.di import Providers, register_settings
 
 TBase = TypeVar("TBase", bound=DeclarativeBase)
 
@@ -28,6 +29,7 @@ async def get_session(
 
 
 providers: Providers = [
+    register_settings(DatabaseSettings),
     aioinject.Singleton(get_engine),
     aioinject.Scoped(get_session),
     aioinject.Scoped(UnitOfWork),

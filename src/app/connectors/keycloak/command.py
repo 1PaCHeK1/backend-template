@@ -35,11 +35,9 @@ class Authenticator:
             aud=[self._settings.client_id],
             sub=uuid.uuid4(),
             typ="Bearer",
-            azp="fastapi-auth-test",
+            azp="backend-auth-test",
             session_state=str(uuid.uuid4()),
             acr="0",
-            realm_access={},
-            resource_access={},
             scope="backend",
             sid=str(uuid.uuid4()),
         )

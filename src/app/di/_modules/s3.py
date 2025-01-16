@@ -9,10 +9,11 @@ from aioboto3 import Session
 from aiobotocore.config import AioConfig
 
 from app.storages.s3 import S3Storage
+from app.storages.s3.settings import S3Settings
 from app.storages.s3.types import S3Client
+from lib.di import register_settings
 
 if TYPE_CHECKING:
-    from app.storages.s3.settings import S3Settings
     from lib.di import Providers
 
 
@@ -43,6 +44,7 @@ def get_s3_storage(client: S3Client, settings: S3Settings) -> S3Storage:
 
 
 providers: Providers = [
+    register_settings(S3Settings),
     aioinject.Singleton(get_s3_client, type_=S3Client),
     aioinject.Scoped(get_s3_storage),
 ]

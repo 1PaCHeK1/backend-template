@@ -19,7 +19,5 @@ class DecodedTokenDTO(BaseModel):
     azp: str
     session_state: str
     acr: str
-    realm_access: dict[str, list[str] | dict[str, list[str]]]
-    resource_access: dict[str, list[str] | dict[str, list[str]]]
     scope: str
     sid: str
