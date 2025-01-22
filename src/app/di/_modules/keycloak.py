@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import contextlib
+from collections.abc import AsyncIterator
 from typing import TYPE_CHECKING
 
 import aioinject
@@ -14,17 +16,19 @@ if TYPE_CHECKING:
     from lib.di import Providers
 
 
-def get_keycloak_service(
+@contextlib.asynccontextmanager
+async def get_keycloak_service(
     settings: KeycloakSettings,
-) -> KeycloakService[DecodedTokenDTO]:
-    return KeycloakService[DecodedTokenDTO](
+) -> AsyncIterator[KeycloakService[DecodedTokenDTO]]:
+    async with KeycloakService[DecodedTokenDTO](
         token_dto=DecodedTokenDTO,
         server_url=settings.server_url,
         client_id=settings.client_id,
         realm_name=settings.realm_name,
         client_secret_key=settings.client_secret_key,
         encoding_algorithm=settings.encoding_algorithm,
-    )
+    ) as keycloak:
+        yield keycloak
 
 
 providers: Providers = [

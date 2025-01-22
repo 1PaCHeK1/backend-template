@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 import asyncio
-from typing import TYPE_CHECKING, cast
+from types import TracebackType
+from typing import TYPE_CHECKING, Self, cast
 
 import jwt
 from cryptography.hazmat.backends import default_backend
@@ -89,3 +90,14 @@ class KeycloakService[TKeycloakTokenDTO: BaseModel]:
             },
         )
         return self.__token_dto__.model_validate(decoded_token)
+
+    async def __aenter__(self) -> Self:
+        return self
+
+    async def __aexit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_value: BaseException | None,
+        traceback: TracebackType | None,
+    ) -> None:
+        await self._kc_open_id.close()
