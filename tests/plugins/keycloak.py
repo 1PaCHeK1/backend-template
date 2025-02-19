@@ -158,7 +158,7 @@ async def _autouse_keycloack_mock(  # pyright: ignore[reportUnusedFunction]
 ) -> None:
     settings = get_settings(TestSettings)
     public_key = settings.auth_public_key.removeprefix(
-        "-----BEGIN PUBLIC KEY-----\n"
+        "-----BEGIN PUBLIC KEY-----\n",
     ).removesuffix(
         "\n-----END PUBLIC KEY-----",
     )

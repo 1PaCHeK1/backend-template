@@ -16,7 +16,8 @@ class Authenticator:
     _settings: KeycloakSettings
 
     async def execute(
-        self, token: str
+        self,
+        token: str,
     ) -> Result[
         DecodedTokenDTO,
         jwt.ExpiredSignatureError | jwt.DecodeError | jwt.InvalidAudienceError,
