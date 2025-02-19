@@ -11,11 +11,11 @@ from lib.asyncio import new_event_loop
 from lib.settings import get_settings
 
 
-class ConfigEnum(enum.StrEnum):
+class ClusterEnum(enum.StrEnum):
     example = enum.auto()
 
 
-settings_cls: Mapping[ConfigEnum, type[KafkaConsumerSettings]] = {}
+cluster_settings_map: Mapping[ClusterEnum, type[KafkaConsumerSettings]] = {}
 
 
 @click.group()
@@ -23,22 +23,22 @@ def cli() -> None: ...
 
 
 @cli.command("consume")
-@click.argument("config", type=click.Choice(tuple(ConfigEnum)))
+@click.argument("cluster", type=click.Choice(tuple(ClusterEnum)))
 @click.option("--include", type=click.STRING, help="example: topic-a,topic-b,topic-c")
 @click.option("--exclude", type=click.STRING, help="example: topic-a,topic-b,topic-c")
 @click.option("--group-instance-id", type=click.STRING)
 def cli_consume(
-    config: str,
+    cluster: str,
     include: str | None,
     exclude: str | None,
     group_instance_id: str | None,
 ) -> None:
-    config_enum = ConfigEnum[config]
+    config_enum = ClusterEnum[cluster]
     if include and exclude:
         msg = "Include and exclude arguments that aren't provided together"
         raise click.BadArgumentUsage(msg)
 
-    settings = get_settings(settings_cls[config_enum])
+    settings = get_settings(cluster_settings_map[config_enum])
 
     topic_configs = list(settings.topic_configs)
     if include is not None:
@@ -59,15 +59,18 @@ def cli_consume(
 
 
 @cli.command("consume-partition")
-@click.argument("config", type=click.Choice(tuple(ConfigEnum)))
+@click.argument("cluster", type=click.Choice(tuple(ClusterEnum)))
 @click.argument("topic", type=click.STRING)
 @click.argument("partition", type=click.IntRange(min=0, max=10))
 @click.option("--group-instance-id", type=click.STRING)
 def cli_consume_partition(
-    config: str, topic: str, partition: int, group_instance_id: str | None = None
+    cluster: str,
+    topic: str,
+    partition: int,
+    group_instance_id: str | None = None,
 ) -> None:
-    config_enum = ConfigEnum[config]
-    settings = get_settings(settings_cls[config_enum])
+    config_enum = ClusterEnum[cluster]
+    settings = get_settings(cluster_settings_map[config_enum])
 
     topic_config = next(
         (config for config in settings.topic_configs if config.topic == topic), None
