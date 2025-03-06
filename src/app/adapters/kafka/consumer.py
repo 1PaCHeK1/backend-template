@@ -5,7 +5,7 @@ import orjson
 from aiokafka import AIOKafkaConsumer, ConsumerRecord, TopicPartition
 from result import Err
 
-from app.adapters.kafka.types import KafkaConsumerSettings, TopicConfig
+from app.connectors.kafka.types import KafkaConsumerSettings, TopicConfig
 from app.di.container import create_container
 
 

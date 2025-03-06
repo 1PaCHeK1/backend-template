@@ -10,13 +10,6 @@ from lib.abc.mapper import MapperProtocol
 from lib.abc.worker import WorkerProtocol
 
 
-@dataclass(kw_only=True, slots=True, frozen=True)
-class TopicConfig[TInput, TResult]:
-    topic: str
-    mapper: type[MapperProtocol[TInput, TResult]]
-    worker: type[WorkerProtocol[TResult]]
-
-
 class SASLPlaintext(TypedDict):
     sasl_plain_username: NotRequired[str | None]
     sasl_plain_password: NotRequired[str | None]
@@ -24,15 +17,8 @@ class SASLPlaintext(TypedDict):
     security_protocol: NotRequired[Literal["SASL_SSL"]]
 
 
-class KafkaConsumerSettings(BaseSettings):
+class KafkaSettings(BaseSettings):
     bootsrap_servers: str = "127.0.0.1:9094"
-    group_id: str = "benefit"
-
-    max_poll_records: int = 500
-    topic_configs: Annotated[
-        ClassVar[Sequence[TopicConfig[Any, Any]]],
-        Field(init=False),
-    ] = []
 
     sasl_username: str | None = None
     sasl_password: str | None = None
@@ -54,3 +40,20 @@ class KafkaConsumerSettings(BaseSettings):
         ctx = ssl.create_default_context(cafile=self.sasl_crt_path)
         ctx.check_hostname = False
         return ctx
+
+
+@dataclass(kw_only=True, slots=True, frozen=True)
+class TopicConfig[TInput, TResult]:
+    topic: str
+    mapper: type[MapperProtocol[TInput, TResult, Exception]]
+    worker: type[WorkerProtocol[TResult, Any, Exception]]
+
+
+class KafkaConsumerSettings(KafkaSettings):
+    group_id: str = "backend"
+
+    max_poll_records: int = 500
+    topic_configs: Annotated[
+        ClassVar[Sequence[TopicConfig[Any, Any]]],
+        Field(init=False),
+    ] = ()

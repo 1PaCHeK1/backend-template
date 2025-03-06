@@ -6,7 +6,7 @@ import click
 from aiokafka import TopicPartition
 
 from app.adapters.kafka.consumer import consume, create_consumer
-from app.adapters.kafka.types import KafkaConsumerSettings
+from app.connectors.kafka.types import KafkaConsumerSettings
 from lib.asyncio import new_event_loop
 from lib.settings import get_settings
 
