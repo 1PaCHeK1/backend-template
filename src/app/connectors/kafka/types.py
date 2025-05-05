@@ -1,13 +1,7 @@
 import ssl
-from collections.abc import Sequence
-from dataclasses import dataclass
-from typing import Annotated, Any, ClassVar, Literal, NotRequired, TypedDict
+from typing import Literal, NotRequired, TypedDict
 
-from pydantic import Field
 from pydantic_settings import BaseSettings
-
-from lib.abc.mapper import MapperProtocol
-from lib.abc.worker import WorkerProtocol
 
 
 class SASLPlaintext(TypedDict):
@@ -40,20 +34,3 @@ class KafkaSettings(BaseSettings):
         ctx = ssl.create_default_context(cafile=self.sasl_crt_path)
         ctx.check_hostname = False
         return ctx
-
-
-@dataclass(kw_only=True, slots=True, frozen=True)
-class TopicConfig[TInput, TResult]:
-    topic: str
-    mapper: type[MapperProtocol[TInput, TResult, Exception]]
-    worker: type[WorkerProtocol[TResult, Any, Exception]]
-
-
-class KafkaConsumerSettings(KafkaSettings):
-    group_id: str = "backend"
-
-    max_poll_records: int = 500
-    topic_configs: Annotated[
-        ClassVar[Sequence[TopicConfig[Any, Any]]],
-        Field(init=False),
-    ] = ()

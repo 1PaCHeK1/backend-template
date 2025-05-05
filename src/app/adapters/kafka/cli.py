@@ -6,7 +6,8 @@ import click
 from aiokafka import TopicPartition
 
 from app.adapters.kafka.consumer import consume, create_consumer
-from app.connectors.kafka.types import KafkaConsumerSettings
+from app.adapters.kafka.settings import KafkaConsumerSettings
+from app.telemetry import setup_telemetry
 from lib.asyncio import new_event_loop
 from lib.settings import get_settings
 
@@ -19,7 +20,8 @@ cluster_settings_map: Mapping[ClusterEnum, type[KafkaConsumerSettings]] = {}
 
 
 @click.group()
-def cli() -> None: ...
+def cli() -> None:
+    setup_telemetry(source="kafka")
 
 
 @cli.command("consume")

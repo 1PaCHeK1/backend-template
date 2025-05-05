@@ -2,7 +2,7 @@ import dataclasses
 from collections.abc import Sequence
 
 
-class PaginationError(Exception):
+class PagePaginationError(Exception):
     pass
 
 
@@ -14,11 +14,11 @@ class PagePaginationParamsDTO:
     def __post_init__(self) -> None:
         if self.page <= 0:
             msg = f"Page should be greater than 0, got {self.page}"
-            raise PaginationError(msg)
+            raise PagePaginationError(msg)
 
         if self.page_size <= 0:
             msg = f"Page size should be greater than 0, got {self.page_size}"
-            raise PaginationError(msg)
+            raise PagePaginationError(msg)
 
 
 @dataclasses.dataclass(slots=True, kw_only=True)

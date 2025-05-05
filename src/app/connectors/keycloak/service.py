@@ -48,7 +48,7 @@ class KeycloakService[TKeycloakTokenDTO: BaseModel]:
             async with self._public_key_lock:
                 if self._cached_public_key is None:
                     public_key = self._public_key_template.format(
-                        public_key=cast(str, await self._kc_open_id.public_key()),
+                        public_key=cast("str", await self._kc_open_id.public_key()),
                     )
                     self._cached_public_key = serialization.load_pem_public_key(
                         public_key.encode(),
@@ -83,7 +83,7 @@ class KeycloakService[TKeycloakTokenDTO: BaseModel]:
             jwt=token,
             key=public_key,  # pyright: ignore[reportArgumentType]
             algorithms=[self._encode_algorithm],
-            audience=cast(str, self._kc_open_id.client_id),
+            audience=cast("str", self._kc_open_id.client_id),
             options={
                 "verify_aud": True,
                 "verify_exp": True,

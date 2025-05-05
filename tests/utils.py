@@ -20,7 +20,7 @@ def uuid4_str() -> str:
 
 
 def approx(value: T) -> T:
-    return cast(T, pytest.approx(value))
+    return cast("T", pytest.approx(value))
 
 
 def datetime_z_format(datetime_: datetime) -> str:

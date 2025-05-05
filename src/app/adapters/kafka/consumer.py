@@ -5,7 +5,7 @@ import orjson
 from aiokafka import AIOKafkaConsumer, ConsumerRecord, TopicPartition
 from result import Err
 
-from app.connectors.kafka.types import KafkaConsumerSettings, TopicConfig
+from app.adapters.kafka.settings import KafkaConsumerSettings, TopicConfig
 from app.di.container import create_container
 
 
@@ -35,8 +35,8 @@ async def consume(
     config_map = {config.topic: config for config in topic_configs}
 
     async with consumer, create_container() as container:
-        async for message in consumer:
-            message: ConsumerRecord[Any, bytes]
+        message: ConsumerRecord[Any, bytes]
+        async for message in consumer:  # pyright: ignore[reportUnknownVariableType]
             async with container.context() as ctx:
                 config = config_map[message.topic]
                 mapper = await ctx.resolve(config.mapper)
