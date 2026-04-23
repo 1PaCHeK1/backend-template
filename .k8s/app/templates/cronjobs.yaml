@@ -38,6 +38,10 @@ spec:
               imagePullPolicy: {{ $.Values.image.pullPolicy }}
               command:
                 {{- $job.entrypoint | toYaml | nindent 16 }}
+              args:
+                {{ range $job.args }}
+                - {{ . | quote }}
+                {{ end }}
               resources:
                 {{- toYaml $.Values.cronjobs.resources | nindent 16 }}
               envFrom:

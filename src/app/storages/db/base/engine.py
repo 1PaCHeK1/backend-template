@@ -1,4 +1,12 @@
-from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
+import contextlib
+from collections.abc import AsyncIterator
+
+from sqlalchemy.ext.asyncio import (
+    AsyncEngine,
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
+)
 
 from app.storages.db.settings import DatabaseSettings
 from lib.settings import get_settings
@@ -6,14 +14,27 @@ from lib.settings import get_settings
 _settings = get_settings(DatabaseSettings)
 
 
-async_engine = create_async_engine(
-    _settings.url,
-    future=True,
-    pool_size=20,
-    pool_pre_ping=True,
-    pool_use_lifo=True,
-    echo=_settings.echo,
-)
+@contextlib.asynccontextmanager
+async def create_engine() -> AsyncIterator[AsyncEngine]:
+    engine = create_async_engine(
+        _settings.url,
+        future=True,
+        pool_size=20,
+        pool_pre_ping=True,
+        pool_use_lifo=True,
+        echo=_settings.echo,
+    )
+    yield engine
+    await engine.dispose()
 
 
-async_session_factory = async_sessionmaker(bind=async_engine)
+def create_session_factory(engine: AsyncEngine) -> async_sessionmaker[AsyncSession]:
+    return async_sessionmaker(bind=engine)
+
+
+@contextlib.asynccontextmanager
+async def get_session(
+    session_factory: async_sessionmaker[AsyncSession],
+) -> AsyncIterator[AsyncSession]:
+    async with session_factory.begin() as session:
+        yield session

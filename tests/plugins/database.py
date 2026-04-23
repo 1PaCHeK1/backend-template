@@ -1,7 +1,6 @@
 import pytest
 from sqlalchemy.ext import asyncio
 
-import app.storages.db.base.engine
 from alembic import config
 from lib.settings import get_settings
 from tests.settings import TestSettings
@@ -13,8 +12,10 @@ def database_url() -> str:
 
 
 @pytest.fixture(scope="session")
-def async_sessionmaker() -> asyncio.async_sessionmaker[asyncio.AsyncSession]:
-    return app.storages.db.base.engine.async_session_factory
+def async_sessionmaker(
+    sqlalchemy_pytest_engine: asyncio.AsyncEngine,
+) -> asyncio.async_sessionmaker[asyncio.AsyncSession]:
+    return asyncio.async_sessionmaker(sqlalchemy_pytest_engine)
 
 
 @pytest.fixture(scope="session")
