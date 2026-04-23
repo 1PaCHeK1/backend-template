@@ -6,8 +6,8 @@ from pydantic_settings import BaseSettings
 
 
 @functools.cache
-def _load_dotenv_once() -> None:
-    dotenv.load_dotenv()
+def _load_dotenv_once(dotenv_path: str = ".env") -> None:
+    dotenv.load_dotenv(dotenv_path=dotenv_path)
 
 
 def get_settings[T: BaseSettings](cls: type[T]) -> T:

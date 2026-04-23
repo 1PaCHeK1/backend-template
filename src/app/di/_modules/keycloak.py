@@ -10,7 +10,7 @@ from app.connectors.keycloak.command import Authenticator
 from app.connectors.keycloak.dto import DecodedTokenDTO
 from app.connectors.keycloak.service import KeycloakService
 from app.connectors.keycloak.settings import KeycloakSettings
-from lib.di import register_settings
+from lib.di import SettingsProvider
 
 if TYPE_CHECKING:
     from lib.di import Providers
@@ -32,7 +32,7 @@ async def get_keycloak_service(
 
 
 providers: Providers = [
-    register_settings(KeycloakSettings),
+    SettingsProvider(KeycloakSettings),
     aioinject.Singleton(
         get_keycloak_service, interface=KeycloakService[DecodedTokenDTO]
     ),

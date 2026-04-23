@@ -9,20 +9,17 @@ from sqlalchemy.ext.asyncio import (
 )
 
 from app.storages.db.settings import DatabaseSettings
-from lib.settings import get_settings
-
-_settings = get_settings(DatabaseSettings)
 
 
 @contextlib.asynccontextmanager
-async def create_engine() -> AsyncGenerator[AsyncEngine]:
+async def create_engine(settings: DatabaseSettings) -> AsyncGenerator[AsyncEngine]:
     engine = create_async_engine(
-        _settings.url,
+        settings.url,
         future=True,
         pool_size=20,
         pool_pre_ping=True,
         pool_use_lifo=True,
-        echo=_settings.echo,
+        echo=settings.echo,
     )
     yield engine
     await engine.dispose()

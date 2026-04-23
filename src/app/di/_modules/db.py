@@ -7,10 +7,10 @@ from app.storages.db.base.engine import (
 )
 from app.storages.db.settings import DatabaseSettings
 from app.storages.db.uow import UnitOfWork
-from lib.di import Providers, register_settings
+from lib.di import Providers, SettingsProvider
 
 providers: Providers = [
-    register_settings(DatabaseSettings),
+    SettingsProvider(DatabaseSettings),
     aioinject.Singleton(create_engine),
     aioinject.Singleton(create_session_factory),
     aioinject.Scoped(get_session),
