@@ -5,49 +5,48 @@ description = ""
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "aioboto3>=13.2.0",
-    "aioinject>=0.35.3",
-    "aiokafka>=0.12.0",
-    "alembic>=1.14.0",
-    "async-keycloak>=0.28.6",
-    "asyncpg>=0.30.0",
-    "click>=8.1.8",
-    "fastapi>=0.115.6",
-    "orjson>=3.10.15",
-    "pydantic>=2.10.4",
-    "pydantic-settings>=2.7.0",
-    "pyjwt[crypto]>=2.10.1",
-    "python-dotenv>=1.0.1",
-    "requests>=2.32.3",
+    "aioboto3>=15.5.0",
+    "aioinject>=1.10.2",
+    "aiokafka>=0.13.0",
+    "alembic>=1.18.4",
+    "asyncpg>=0.31.0",
+    "click>=8.3.3",
+    "fastapi>=0.136.1",
+    "orjson>=3.11.8",
+    "pydantic>=2.13.3",
+    "pydantic-settings>=2.14.0",
+    "pyjwt[crypto]>=2.12.1",
+    "python-dotenv>=1.2.2",
+    "python-keycloak>=7.1.1",
     "result>=0.17.0",
-    "sentry-sdk>=2.19.2",
-    "sqlalchemy[asyncio]>=2.0.36",
-    "uuid-utils>=0.10.0",
-    "uvicorn[standard]>=0.34.0",
+    "sentry-sdk>=2.58.0",
+    "sqlalchemy[asyncio]>=2.0.49",
+    "uuid-utils>=0.14.1",
+    "uvicorn[standard]>=0.46.0",
     "uvloop>=0.21.0 ; sys_platform != 'win32'",
 ]
 
 [dependency-groups]
 types = [
-    "types-aiobotocore-s3>=2.16.0",
+    "types-aiobotocore-s3>=3.5.0",
 ]
 lint = [
-    "deptry>=0.21.2",
-    "mypy>=1.13.0",
-    "pyright>=1.1.391",
-    "ruff>=0.8.4",
+    "deptry>=0.25.1",
+    "mypy>=1.20.2",
+    "pyright>=1.1.409",
+    "ruff>=0.15.11",
 ]
 test = [
-    "coverage>=7.6.9",
-    "polyfactory>=2.18.1",
-    "pytest-archon>=0.0.6",
-    "pytest>=8.3.4",
-    "asgi-lifespan>=2.1.0",
+    "anyio>=4.13.0",
     "sqlalchemy-pytest>=0.3.2.post1",
-    "anyio>=4.7.0",
+    "asgi-lifespan>=2.1.0",
+    "pytest>=9.0.3",
+    "pytest-archon>=0.0.7",
+    "polyfactory>=3.3.0",
+    "coverage>=7.13.5",
 ]
 dev = [
-    "commitizen>=4.1.0",
+    "commitizen>=4.13.10",
 ]
 
 [tool.uv]
@@ -161,7 +160,6 @@ DEP002 = [
     "uvicorn",
     "uvloop",
     "asyncpg",
-    "requests", # keycloak client
 ]
 DEP003 = [
     "botocore",
@@ -169,3 +167,6 @@ DEP003 = [
     "starlette",
     "cryptography", # keycloak client
 ]
+
+[tool.deptry.package_module_name_map]
+uvloop = "uvloop"

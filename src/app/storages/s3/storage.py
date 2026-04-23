@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import contextlib
 import mimetypes
-from collections.abc import AsyncIterator, Sequence
+from collections.abc import AsyncGenerator, Sequence
 from io import BytesIO
 from os import PathLike
 from pathlib import PurePath
@@ -89,7 +89,9 @@ class S3Storage:
         )
 
     @contextlib.asynccontextmanager
-    async def upload_object(self, dto: UploadFileDTO) -> AsyncIterator[UploadedFileDTO]:
+    async def upload_object(
+        self, dto: UploadFileDTO
+    ) -> AsyncGenerator[UploadedFileDTO]:
         uploaded_dto = await self._upload_object(dto)
         try:
             yield uploaded_dto

@@ -7,6 +7,7 @@ from unittest.mock import MagicMock, Mock
 import aioinject
 import jwt
 import pytest
+from aioinject.testing import TestContainer
 from result import Ok
 
 from app.connectors.keycloak.dto import DecodedTokenDTO
@@ -143,11 +144,11 @@ def access_token(access_token_dto: DecodedTokenDTO) -> str:
 
 
 @pytest.fixture(scope="session")
-async def keycloack_mock(
-    container: aioinject.Container,
-) -> AsyncIterator[Mock]:
+async def keycloack_mock(test_container: TestContainer) -> AsyncIterator[Mock]:
     mock = MagicMock(KeycloakService[DecodedTokenDTO])
-    with container.override(aioinject.Object(mock, KeycloakService[DecodedTokenDTO])):
+    with test_container.override(
+        aioinject.Object(mock, KeycloakService[DecodedTokenDTO])
+    ):
         yield mock
 
 

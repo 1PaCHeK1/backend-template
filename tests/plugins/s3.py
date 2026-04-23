@@ -2,13 +2,14 @@ from collections.abc import AsyncIterator
 
 import aioinject
 import pytest
+from aioinject.testing import TestContainer
 
 from app.storages.s3.settings import S3Settings
 from app.storages.s3.storage import S3Storage
 
 
 @pytest.fixture
-async def s3_mock(container: aioinject.Container) -> AsyncIterator[None]:
+async def s3_mock(test_container: TestContainer) -> AsyncIterator[None]:
     settings = S3Settings(
         endpoint_url="https://test",
         bucket="test",
@@ -20,8 +21,8 @@ async def s3_mock(container: aioinject.Container) -> AsyncIterator[None]:
         bucket=settings.bucket,
         endpoint_url=settings.endpoint_url,
     )
-    with container.override(
-        aioinject.Object(settings, type_=S3Settings),
-        aioinject.Object(s3_storage, type_=S3Storage),
+    with (
+        test_container.override(aioinject.Object(settings, interface=S3Settings)),
+        test_container.override(aioinject.Object(s3_storage, interface=S3Storage)),
     ):
         yield

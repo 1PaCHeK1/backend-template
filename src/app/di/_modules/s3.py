@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import contextlib
-from collections.abc import AsyncIterator
+from collections.abc import AsyncGenerator
 from typing import TYPE_CHECKING
 
 import aioinject
@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 
 
 @contextlib.asynccontextmanager
-async def get_s3_client(settings: S3Settings) -> AsyncIterator[S3Client]:
+async def get_s3_client(settings: S3Settings) -> AsyncGenerator[S3Client]:
     session = Session(
         aws_access_key_id=settings.access_key,
         aws_secret_access_key=settings.secret_access_key,
@@ -45,6 +45,6 @@ def get_s3_storage(client: S3Client, settings: S3Settings) -> S3Storage:
 
 providers: Providers = [
     register_settings(S3Settings),
-    aioinject.Singleton(get_s3_client, type_=S3Client),
+    aioinject.Singleton(get_s3_client, interface=S3Client),
     aioinject.Scoped(get_s3_storage),
 ]

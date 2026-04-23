@@ -42,4 +42,4 @@ def autodiscover_providers(
 
 def register_settings[T: BaseSettings](settings_cls: type[T]) -> aioinject.Singleton[T]:
     factory = functools.partial(get_settings, settings_cls)
-    return aioinject.Singleton(factory, type_=settings_cls)
+    return aioinject.Singleton(factory, interface=settings_cls)

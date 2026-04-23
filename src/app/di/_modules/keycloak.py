@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import contextlib
-from collections.abc import AsyncIterator
+from collections.abc import AsyncGenerator
 from typing import TYPE_CHECKING
 
 import aioinject
@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 @contextlib.asynccontextmanager
 async def get_keycloak_service(
     settings: KeycloakSettings,
-) -> AsyncIterator[KeycloakService[DecodedTokenDTO]]:
+) -> AsyncGenerator[KeycloakService[DecodedTokenDTO]]:
     async with KeycloakService[DecodedTokenDTO](
         token_dto=DecodedTokenDTO,
         server_url=settings.server_url,
@@ -33,6 +33,8 @@ async def get_keycloak_service(
 
 providers: Providers = [
     register_settings(KeycloakSettings),
-    aioinject.Singleton(get_keycloak_service, type_=KeycloakService[DecodedTokenDTO]),
+    aioinject.Singleton(
+        get_keycloak_service, interface=KeycloakService[DecodedTokenDTO]
+    ),
     aioinject.Scoped(Authenticator),
 ]

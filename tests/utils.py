@@ -1,13 +1,11 @@
 import uuid
 from datetime import datetime
-from typing import TypeVar, cast
+from typing import cast
 
 import pytest
 
 from lib.settings import get_settings
 from tests.settings import TestSettings
-
-T = TypeVar("T")
 
 
 def casefold_for_platform(s: str) -> str:
@@ -19,7 +17,7 @@ def uuid4_str() -> str:
     return str(uuid.uuid4())
 
 
-def approx(value: T) -> T:
+def approx[T](value: T) -> T:
     return cast("T", pytest.approx(value))
 
 

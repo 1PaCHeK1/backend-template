@@ -82,7 +82,7 @@ services:
 volumes:
   pg_data:
   kafka_data:
-  minio_storage: {}
+  minio_storage:
 
 networks:
   backend-service-network:

@@ -1,5 +1,5 @@
 import contextlib
-from collections.abc import AsyncIterator, Iterable
+from collections.abc import AsyncGenerator, Iterable
 
 from aioinject.ext.fastapi import AioInjectMiddleware
 from fastapi import APIRouter, FastAPI
@@ -18,7 +18,7 @@ _routers: Iterable[APIRouter] = [
 
 
 @contextlib.asynccontextmanager
-async def _lifespan(_: FastAPI) -> AsyncIterator[None]:
+async def _lifespan(_: FastAPI) -> AsyncGenerator[None]:
     async with create_container():
         yield
 

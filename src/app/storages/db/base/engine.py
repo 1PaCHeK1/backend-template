@@ -1,5 +1,5 @@
 import contextlib
-from collections.abc import AsyncIterator
+from collections.abc import AsyncGenerator
 
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
@@ -15,7 +15,7 @@ _settings = get_settings(DatabaseSettings)
 
 
 @contextlib.asynccontextmanager
-async def create_engine() -> AsyncIterator[AsyncEngine]:
+async def create_engine() -> AsyncGenerator[AsyncEngine]:
     engine = create_async_engine(
         _settings.url,
         future=True,
@@ -35,6 +35,6 @@ def create_session_factory(engine: AsyncEngine) -> async_sessionmaker[AsyncSessi
 @contextlib.asynccontextmanager
 async def get_session(
     session_factory: async_sessionmaker[AsyncSession],
-) -> AsyncIterator[AsyncSession]:
+) -> AsyncGenerator[AsyncSession]:
     async with session_factory.begin() as session:
         yield session
