@@ -44,6 +44,9 @@ stages:
 
 pyright:
   extends: .lint-job
+  before_script:
+    - !reference [.python-job, before_script]
+    - apk add --no-cache libatomic1
   script:
     - uv run pyright .
 
