@@ -59,7 +59,7 @@ class S3Storage:
             )
         except ClientError as ex:
             return Err(ex)
-
+        file_stream.seek(0)
         return Ok(file_stream)
 
     async def delete_object(self, path: Path) -> None:
